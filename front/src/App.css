@@ -1,5 +1,114 @@
 .App {
   text-align: center;
+  min-height: 100vh;
+  min-width: 100vw;
+  background: url('./background.png');
+  background-size: cover;
+  color: white;
+}
+
+.sign-field {
+  margin: 2em;
+}
+
+.home-btn {
+  border-radius: 20em;
+  background-color: transparent;
+  color: white;
+  font-size: 1.3em;
+  margin: 0.7em;
+  padding: 0.8em;
+  width: 14em;
+  border-style: solid;
+  font-family: 'Quicksand';
+  text-align: center;
+}
+
+.next-apply-btn {
+  font-family: 'Quicksand';
+  font-size: 1.3em;
+  border-radius: 2em;
+}
+
+.page-bord {
+  margin: 7em;
+  text-align: left;
+}
+
+.page-bord-centre {
+  margin: 1em 7em 1em 7em;
+}
+
+.hPage-titles {
+  margin-top: 10em;
+  margin-bottom: 7em;
+}
+
+.mtk-logo {
+  border-radius: 0.5em;
+}
+
+::placeholder {
+  text-align: center;
+}
+
+.navbar-title {
+  color: white;
+  font-size: 1.7em;
+  margin-top: 0.8em;
+  margin-right: 2.5em;
+  font-family: 'Quicksand';
+}
+
+h1 {
+  font-family: 'Nanum Gothic';
+  font-size: 6em;
+  font-style: normal;
+}
+
+h2 {
+  font-family: 'Spartan';
+  font-size: 4em;
+  font-style: normal;
+}
+
+.micro-title {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.3em;
+  /* float: left; */
+}
+
+h3 {
+  font-family: 'Nanum Gothic';
+  font-size: 2.5em;
+  font-style: normal;
+}
+
+.big-card {
+  display: block;
+  background-color: #1e0036;
+  border-color: #9e31f8;
+  border-radius: 3em;
+  border-width: 0.4em;
+  border-style: solid;
+  padding: 2em;
+}
+
+.g-border-btn {
+  border-color: #35e6c8;
+}
+
+.p-border-btn {
+  border-color: #dd2ac5;
+}
+
+.m-submit-btn {
+  background-color: rgb(190, 20, 206);
+  padding: 1em;
+  border-radius: 3em;
+  width: 4em;
+  height: 4em;
+  border-style: none;
 }
 
 .App-logo {
@@ -14,7 +123,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,6 +131,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+
 }
 
 .App-link {

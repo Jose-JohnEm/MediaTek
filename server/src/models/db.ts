@@ -13,15 +13,24 @@ interface user {
     saved: number[]
 }
 
+interface reply {
+    _id: number
+    epoch: number
+    writer_id: number
+    comment: string
+}
+
 interface comments {
     _id: number
-    writer: user
+    epoch: number
+    writer_id: number
     comment: string
-    replyed: comments[]
+    replyed: reply[]
 }
 
 interface post {
     _id: number
+    epoch: number
     title: string
     category: string
     description: string

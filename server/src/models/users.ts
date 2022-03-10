@@ -25,10 +25,12 @@ const userSchema = new Schema<user>({
     email: {
         type: String,
         required: true,
+        unique: true,
         validate: [emailValidation, 'invalidEmail']
     },
     pseudo: {
         type: String,
+        unique: true,
         required: true,
     },
     password: {

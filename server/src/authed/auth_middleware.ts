@@ -1,22 +1,21 @@
 import express, {Request, Response, NextFunction} from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
+const config = process.env;
 
-var authware_required = (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const token = (req.headers.authorization as string).split('Bearer ')[1];
-      const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET') as JwtPayload;
-      const userId = decodedToken.userIdl;
-      if (req.body.userId && req.body.userId !== userId) {
-        throw 'Invalid user ID';
-      } else {
-        next();
-      }
-    } catch (error) {
-      res.status(401).json({
-        error: error
-      });
-    }
-}
+const authware = (req: Request<{},{}, JwtPayload>, res: Response, next: NextFunction) => {
+  const token = (req.headers.authorization as string).split(' ')[1];
 
-export default authware_required
+  if (!token) {
+    return res.status(403).send({status: 403, message: "A token is required for authentication"});
+  }
+  try {
+    const decoded = jwt.verify(token, config.JWT_TOKEN as string);
+    req.body = decoded as JwtPayload;
+  } catch (err) {
+    return res.status(401).send({status: 401, message: "Invalid Token"});
+  }
+  return next();
+};
+
+export default authware

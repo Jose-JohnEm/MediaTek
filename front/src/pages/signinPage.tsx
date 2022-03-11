@@ -1,11 +1,50 @@
 import React, { useState } from 'react'
-import { Button, Input, Link } from '@mui/material';
+import { Alert, Button, Input, Link, Snackbar } from '@mui/material';
 import { inputSignStyle } from '../components/style'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const apiUrl = 'http://localhost:8080'
+
+axios.interceptors.request.use(
+    config => {
+      const { origin } = new URL(config.url as string);
+      const allowedOrigins = [apiUrl];
+      const token = localStorage.getItem('token');    if (allowedOrigins.includes(origin)) {
+        config.headers!.authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+);
 
 const SigninPage : React.FC =  () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    
+    const [open, setOpen] = useState(false)
+    const [message, setMessage] = useState('')
+    const nav = useNavigate()
+
+    const closeSnack = () => {
+        setOpen(false)
+    }
+
+    async function tryLogin () {
+        try {
+            const { data } = await axios.post(`${apiUrl}/login`, {
+                email: email,
+                password: password,
+            });
+            localStorage.setItem('token', data.token);
+            nav('/news')
+        } catch (err) {
+            setMessage(err as string)
+            setOpen(true)
+        }
+    }
+
     return (
         <div className="page-bord-centre">
             <h2>Connectez-vous</h2>
@@ -33,6 +72,7 @@ const SigninPage : React.FC =  () => {
                 <Button
                     color="secondary"
                     variant="outlined"
+                    onClick={tryLogin}
                     sx={{
                         padding: '0.5em',
                         fontFamily: 'Quicksand',
@@ -41,6 +81,11 @@ const SigninPage : React.FC =  () => {
                         borderStyle: 'solid'
                     }}
                 >Suivant</Button>
+                <Snackbar open={open} autoHideDuration={6000} onClose={closeSnack}>
+                  <Alert onClose={closeSnack} severity="error" sx={{ width: '100%' }}>
+                    {message}
+                  </Alert>
+                </Snackbar>
             </div>
         </div>
     )

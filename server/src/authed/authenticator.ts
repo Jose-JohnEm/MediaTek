@@ -18,7 +18,7 @@ router.route('/validation')
 router.route('/user')
     .get(getProfile)
     .delete(rmProfile)
-    
+
 router.route('/user/posts')
     .get(getPosts)
     .post(addPost)

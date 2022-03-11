@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Input, Link } from '@mui/material';
+import { Alert, Button, Input, Link, Snackbar } from '@mui/material';
 import { inputSignStyle } from '../components/style'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -26,18 +26,30 @@ const SignupPage = () => {
     const [c_password, setCPassword] = useState('')
     const [pseudo, setPseudo] = useState('')
     const nav = useNavigate()
+    const [open, setOpen] = useState(false)
+    const [message, setMessage] = useState('')
+
+    const closeSnack = () => {
+        setOpen(false)
+    }
 
     const submitLogins = async () => {
-        const { data } = await axios.post(`${apiUrl}/register`, {
-            email: email,
-            password: password,
-            pseudo: pseudo,
-        });
-        console.log(data)
-        if (password !== c_password) {
-            return
+        try {
+            if (password != c_password) {
+                throw 'Les mots de passes doivent être identiques'
+            }
+
+            const { data } = await axios.post(`${apiUrl}/register`, {
+                email: email,
+                password: password,
+                pseudo: pseudo,
+            });
+            localStorage.setItem('token', data.token);
+            nav('/validation')
+        } catch (error) {
+            setMessage(error as string)
+            setOpen(true)
         }
-        nav('/validation')
     }
 
     return (
@@ -97,6 +109,11 @@ const SignupPage = () => {
                         borderStyle: 'solid'
                     }}
                 >Suivant</Button>
+                <Snackbar open={open} autoHideDuration={6000} onClose={closeSnack}>
+                  <Alert onClose={closeSnack} severity="error" sx={{ width: '100%' }}>
+                    {message}
+                  </Alert>
+                </Snackbar>
             </div>
         </div>
     )

@@ -29,7 +29,7 @@ export const rmPost = async (req: express.Request<{},{}, JwtPayload>, res: expre
 
         if (user == undefined)
             throw 'Post does not exists...'
-        
+
         res.json({message: 'Post no longer exists'})
     } catch (error) {
         res.status(404).json({status: 404, message: error})

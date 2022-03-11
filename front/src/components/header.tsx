@@ -1,8 +1,49 @@
 import * as React from 'react';
 
 import {Navbar, Container, Nav}  from 'react-bootstrap';
+import axios from 'axios';
+
 
 function Header () {
+
+  function logout() {
+    localStorage.removeItem('token');
+  }
+
+  function SignProfile() {
+    if (localStorage.getItem('token')) {
+      return (
+        <>
+        <Nav.Link href="/signin">
+            <p className="navbar-title">
+              Mon profil
+            </p>
+          </Nav.Link>
+          <Nav.Link onClick={logout} href="/">
+            <p className="navbar-title">
+              Se déconnecter
+            </p>
+          </Nav.Link>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <Nav.Link href="/signin">
+            <p className="navbar-title">
+              Se connecter
+            </p>
+          </Nav.Link>
+          <Nav.Link href="/signup">
+            <p className="navbar-title">
+              S'inscrire
+            </p>
+          </Nav.Link>
+        </>
+      )
+    }
+  }
+
   return (
     <Navbar bg="transparent" sticky="top" expand="lg" style={{backgroundColor: 'black'}} >
       <Container fluid style={{backgroundColor: 'black'}} >
@@ -36,16 +77,7 @@ function Header () {
                 Publier
               </p>
             </Nav.Link>
-            <Nav.Link href="/signin">
-              <p className="navbar-title">
-                Se connecter
-              </p>
-            </Nav.Link>
-            <Nav.Link href="/signup">
-              <p className="navbar-title">
-                S'inscrire
-              </p>
-            </Nav.Link>
+            <SignProfile/>
             </Nav>
         </Navbar.Collapse>
       </Container>

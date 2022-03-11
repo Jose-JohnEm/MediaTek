@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Input } from '@mui/material';
+import { Alert, Button, Input, Snackbar } from '@mui/material';
 import { inputSignStyle } from '../components/style'
 import axios  from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -25,32 +25,60 @@ const ValidationPage : React.FC =  () => {
     const nav = useNavigate()
     const storedJwt : string = localStorage.getItem('token')!
     const [jwt, setJwt] = useState(storedJwt || '')
+    const [open, setOpen] = useState(false)
+    const [message, setMessage] = useState('')
+    const [category, setCategory] = useState('info')
+
+    const closeSnack = () => {
+        setOpen(false)
+    }
 
     const isTokenValid = async () => {
-        const { data } = await axios.get(`${apiUrl}/auth/user`);
-        if (data._id === undefined) {
+        const { status, data } = await axios.get(`${apiUrl}/auth/user`);
+        if (status === 201 && data._id === undefined) {
             if (data.message === "Invalid Token") {
                 nav('/singin')
             }
         }
-
-    }
-
-    const isCodeValid = async ()  => {
-        const { status } = await axios.post(`${apiUrl}/register`, {
-            code: code,
-        });
-        if (status === 200) {
-            nav('/news')
+        else {
+            setCategory('error')
+            setMessage("Le token est expiré !")
+            setOpen(true)
         }
     }
-    
+
+    const isCodeValid = async () => {
+        try {
+            const { status } = await axios.post(`${apiUrl}/auth/validation`, {
+                code: parseInt(code),
+            });
+            if (status === 200) {
+                nav('/news')
+                return
+            }
+        } catch (error) {
+            setCategory('error')
+            setMessage(`Code ${error as string}`)
+            setOpen(true)
+        }
+    }
+
     const reSendCode = async () => {
-        await axios.get(`${apiUrl}/register`);
+        try {
+            await axios.get(`${apiUrl}/auth/validation`);
+
+            setMessage(`Un nouveau code a été envoyé !`)
+            setCategory('info')
+            setOpen(true)
+        } catch (error) {
+            setCategory('error')
+            setMessage(`Une erreur s'est produite durant l'envoi du code`)
+            setOpen(true)
+        }
     }
 
     isTokenValid()
-    
+
     return (
         <div className="page-bord-centre">
             <h2>Confirmez votre code secret</h2>
@@ -92,6 +120,11 @@ const ValidationPage : React.FC =  () => {
                         borderStyle: 'solid'
                     }}
                 >Suivant</Button>
+                <Snackbar open={open} autoHideDuration={6000} onClose={closeSnack}>
+                  <Alert onClose={closeSnack} severity="error" sx={{ width: '100%' }}>
+                    {message}
+                  </Alert>
+                </Snackbar>
             </div>
         </div>
     )

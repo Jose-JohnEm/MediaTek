@@ -1,12 +1,62 @@
-import React, { ReactNode, useState } from 'react'
-import { Button, FormControl, FormControlLabel, FormLabel, Input, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent } from '@mui/material';
+import React, { ReactNode, useEffect, useState } from 'react'
+import { Alert, AlertColor, Button, FormControl, FormControlLabel, FormLabel, Input, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Snackbar } from '@mui/material';
 import { inputDescriptionStyle, inputSignStyle } from '../components/style'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const apiUrl = 'http://localhost:8080'
+
+axios.interceptors.request.use(
+    config => {
+      const { origin } = new URL(config.url as string);
+      const allowedOrigins = [apiUrl];
+      const token = localStorage.getItem('token');    if (allowedOrigins.includes(origin)) {
+        config.headers!.authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+);
 
 const UploadPage = () => {
     const [titre, setTitre] = useState('')
     const [category, setCategory] = useState('')
     const [file, setFile] = useState('')
     const [description, setDescription] = useState('')
+    const nav = useNavigate()
+    const [open, setOpen] = useState(false)
+    const [message, setMessage] = useState('')
+    const [sevCategory, setSevCategory] = useState('error')
+
+
+    if (!localStorage.getItem('token')) {
+        nav('/signin')
+    }
+
+    const closeSnack = () => {
+        setOpen(false)
+    }
+
+    const submitLogins = async () => {
+        try {
+            const { data } = await axios.post(`${apiUrl}/auth/user/posts`, {
+                title: titre,
+                category: category,
+                src: file,
+                description: description,
+            });
+
+            setSevCategory('success')
+            setMessage("Ton post a été créé avec succès")
+            setOpen(true)
+        } catch (error) {
+            setSevCategory('error')
+            setMessage(error as string)
+            setOpen(true)
+        }
+    }
 
     return (
         <div className="page-bord-centre">
@@ -31,7 +81,7 @@ const UploadPage = () => {
                                 id="demo-simple-select"
                                 value='Photo'
                                 label="Catégorie"
-                                onChange={(ev: SelectChangeEvent<string>, child: ReactNode): void => setTitre(ev.target.value)}
+                                onChange={(ev: SelectChangeEvent<string>, child: ReactNode): void => setCategory(ev.target.value)}
                                 sx={inputSignStyle}
                             >
                                 <MenuItem value="photo" sx={inputSignStyle}>Photo</MenuItem>
@@ -64,7 +114,7 @@ const UploadPage = () => {
                     <Button
                         color="secondary"
                         variant="outlined"
-                        href='/validation'
+                        onClick={submitLogins}
                         sx={{
                             padding: '0.5em',
                             fontFamily: 'Quicksand',
@@ -73,6 +123,11 @@ const UploadPage = () => {
                             borderStyle: 'solid'
                         }}
                     >Suivant</Button>
+                    <Snackbar open={open} autoHideDuration={2000} onClose={closeSnack}>
+                      <Alert onClose={closeSnack} severity={sevCategory as AlertColor} sx={{ width: '100%' }}>
+                        {message}
+                      </Alert>
+                    </Snackbar>
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@ import { getProfile, rmProfile } from './profile';
 import { getPosts, addPost, rmPost } from './posts';
 import { addLiked, getLikeds, rmLiked } from './liked';
 import { addSaved, getSaveds, rmSaved } from './saved';
-import { addComment, rmComment } from './comment';
+import { addComment, editComment, rmComment } from './comment';
 import { checkValidation, sendAnotherCode } from './validation';
 
 var router = express.Router()
@@ -36,6 +36,7 @@ router.route('/user/saved')
 
 router.route('/user/comment')
     .post(addComment)
+    .put(editComment)
     .delete(rmComment)
 
 export default router

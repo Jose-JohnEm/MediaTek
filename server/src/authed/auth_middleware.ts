@@ -14,6 +14,11 @@ const authware = async (req: Request<{},{}, JwtPayload>, res: Response, next: Ne
     const decoded = jwt.verify(token, config.JWT_TOKEN as string);
     req.body = {...req.body, ...decoded as JwtPayload};
     await UserModel.findById(req.body.user_id)
+
+    if (req.url != '/validation' && (await UserModel.findById(req.body.user_id))!.certificat!.valid == false ) {
+      return res.status(402).send({status: 402, message: "User is not authenticated"});
+    }
+
   } catch (err) {
     return res.status(401).send({status: 401, message: "Invalid Token"});
   }

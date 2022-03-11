@@ -7,7 +7,6 @@ interface user {
     email: string
     pseudo: string
     password: string
-    token?: string
     certificat?: {
         valid?: boolean
         code?: number
@@ -37,7 +36,6 @@ const userSchema = new Schema<user>({
         type: String,
         required: true,
     },
-    token: String,
     certificat: {
         valid: {
             type: Boolean,

@@ -39,9 +39,7 @@ export const login = async (req: Request, res: Response) => {
         const user = await UserModel.findOne({ email });
         if (user && (await bcrypt.compare(password, user.password))) {
             const token = jwt.sign({ user_id: user._id, email }, process.env.JWT_TOKEN as string, { expiresIn: "1h" });
-            user.token = token;
-            await user.save()
-            return res.status(200).json(user);
+            return res.status(200).json({token: token});
         }
         return res.status(400).send({status: 400, message: "Invalid Credentials"});
     } catch (err) {
@@ -79,11 +77,8 @@ export const register = async (req: Request, res: Response) => {
         emailCodeSend(email.toLowerCase(), user.certificat!.code!)
 
         const token = jwt.sign({user_id: user._id, email}, process.env.JWT_TOKEN as string, { expiresIn: "1h" });
-        user.token = token;
 
-        await user.save()
-
-      res.status(201).json(user);
+      res.status(201).json({token: token});
     } catch (err) {
         console.log(err);
         return res.status(401).json({status: 401, message: err});

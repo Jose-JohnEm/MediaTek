@@ -15,12 +15,13 @@ export const rmProfile = async (req: express.Request<{},{}, JwtPayload>, res: ex
         post.delete()
     }
 
-    for (const comment of await CommentModel.find({writer_id: req.body.user_id})) {
-        comment.delete()
-    }
-
-    for (const reply of await ReplyModel.find({writer_id: req.body.user_id})) {
-        reply.delete()
+    for (const post of await PostModel.find({"comments.writer_id": req.body.user_id})) {
+        for (const comment of post.comments) {
+            for (const reply of comment.replyes!) {
+                comment.remove({"replyes._id": reply._id})
+            }
+            post.remove({"comment._id": comment._id})
+        }
     }
 
     await UserModel.findByIdAndDelete(req.body.user_id).exec()

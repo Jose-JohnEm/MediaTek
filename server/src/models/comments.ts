@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 import { replySchema, reply } from './reply';
 
 const Schema = mongoose.Schema;
@@ -9,7 +9,7 @@ export interface comment {
     writer_id: string
     writer_pseudo: string
     comment: string
-    replyes?: reply[]
+    replyes?: Types.DocumentArray<Document & reply>
 }
 
 export const commentSchema = new Schema<comment>({

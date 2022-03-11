@@ -5,7 +5,7 @@ const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS,
     secretAccessKey: process.env.AWS_SECRET,
     signatureVersion: 'v4',
-    region: 'eu-west-3'
+    region: 'eu-west-3',
 })
 
 const uploadFile = (fileName: string) => {
@@ -28,7 +28,7 @@ const uploadFile = (fileName: string) => {
 async function getMedia() {
     const data = await s3.getSignedUrlPromise('getObject', {
       Bucket: process.env.AWS_BUCKET as string,
-      Key: 'mtk.png'
+      Key: 'mtk.png',
     })
     
     console.log(data);

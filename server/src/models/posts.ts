@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types, Document } from "mongoose";
 import { comment, commentSchema } from './comments'
 
 
@@ -17,7 +17,7 @@ interface post {
     }
     likes: number
     views: number
-    comments: comment[]
+    comments: Types.DocumentArray<Document & comment>
 }
 
 export const postSchema = new Schema<post>({

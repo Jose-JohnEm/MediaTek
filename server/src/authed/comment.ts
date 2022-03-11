@@ -9,7 +9,7 @@ export const addComment = async (req: express.Request<{},{}, JwtPayload>, res: e
     try {
         var user = await UserModel.findById(req.body.user_id)
         var post = await PostModel.findById(req.body.post_id)
-        
+
         if (req.body.parent == 'post') {
             var com = {
                 comment: req.body.comment,

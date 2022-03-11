@@ -6,6 +6,7 @@ import fs from 'fs'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import { login, register } from './src/sign/sign'
+import { getAllPosts } from './src/authed/posts';
 
 dotenv.config()
 
@@ -25,8 +26,6 @@ const successServerStarted = () => {
 (async () => {
   try {
     await mongoose.connect(process.env.MONGO_DB as string)
-
-    
     app.listen(PORT, successServerStarted);
   }
   catch (error) {
@@ -47,5 +46,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/register', register)
 app.post('/login', login)
+
+app.get('/posts', getAllPosts)
 
 app.use('/auth', auth)

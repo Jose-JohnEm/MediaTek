@@ -1,12 +1,93 @@
 import { Button, Card, Divider, Grid, Input } from "@mui/material";
 import { cardStyle, inputCommentStyle, buttonCommentStyle } from '../components/style';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { borderColor } from "@mui/system";
+import { IComment, IPost, IReply } from './interfaces'
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export function ImagePost() {
+const apiUrl = 'http://localhost:8080'
+
+axios.interceptors.request.use(
+    config => {
+      const { origin } = new URL(config.url as string);
+      const allowedOrigins = [apiUrl];
+      const token = localStorage.getItem('token');    if (allowedOrigins.includes(origin)) {
+        config.headers!.authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+);
+
+const Reply : React.FC<{obj: IReply, id: string}> = (props) => {
+    return (
+        <>
+            <Grid container>
+                <Grid item xs={5}>
+                    <div className="artist-comment-reply">{props.obj.writer_pseudo}</div>
+                </Grid>
+                <Grid item xs={6}>
+                    <div className="text-comment">{props.obj.comment}</div>
+                </Grid>
+                <Grid item xs={1}>
+                    <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
+                        <img src="/bin.png" alt="remove" style={{width: '1em'}}></img>
+                    </button>
+                </Grid>
+            </Grid>
+        </>
+    )
+}
+
+const Comment : React.FC<{obj: IComment, id: string}> = (props) => {
+
+    return (
+        <>
+            <Grid container>
+                <Grid item xs={3}>
+                    <div className="artist-comment">{props.obj.writer_pseudo}</div>
+                </Grid>
+                <Grid item xs={7}>
+                    <div className="text-comment">{props.obj.comment}</div>
+                </Grid>
+                <Grid item xs={1}>
+                    <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
+                        <img src="/reply.svg" alt="remply" style={{width: '1em'}}></img>
+                    </button>
+                    <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
+                        <img src="/bin.png" alt="remove" style={{width: '1em'}}></img>
+                    </button>
+                </Grid>
+            </Grid>
+            {props.obj.replyes.map((reply: IReply, i: number) => <Reply obj={reply} id={reply._id} />)}
+        </>
+    )
+}
+
+export const Post : React.FC<{obj: IPost, id: string}> = (props) => {
     const [isClick, setClick] = useState(false);
     const [comment, setComment] = useState('')
-    
+    const nav = useNavigate()
+
+    async function handleComment() {
+        try {
+            await axios.post(`${apiUrl}/auth/user/comment`, {
+                parent: 'post',
+                post_id: props.id,
+                comment: comment
+            })
+            setComment('')
+            console.log("Mouais");
+
+        }
+        catch (err) {
+            nav('/signin')
+        }
+    }
+
     return (
         <div>
             <Card
@@ -15,16 +96,16 @@ export function ImagePost() {
             >
                 <Grid container >
                     <Grid item xs={6}>
-                        <img src="/mtk.png" alt="Publication" className="post-img"></img>
+                        <img src={props.obj.src} alt={props.obj.title} className="post-img"></img>
                     </Grid>
                     <Grid item xs={6}>
                         <div className="post-card-part">
-                            <h5>LD2J</h5>
-                            <h4>C'est toi</h4>
-                            <h6>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, </h6>
+                            <h5>{props.obj.artist.name}</h5>
+                            <h4>{props.obj.title}</h4>
+                            <h6>{props.obj.description}</h6>
                             <Grid container>
                                 <Grid item xs={3}>
-                                    <div className="post-counter">1729</div>
+                                    <div className="post-counter">{props.obj.likes}</div>
                                 </Grid>
                                 <Grid item xs={3}>
                                     <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
@@ -32,7 +113,7 @@ export function ImagePost() {
                                     </button>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <div className="post-counter">2917</div>
+                                    <div className="post-counter">{props.obj.views}</div>
                                 </Grid>
                                 <Grid item xs={3}>
                                     <img src="/eye.svg" alt="vues" style={{width: '3em'}}></img>
@@ -41,58 +122,13 @@ export function ImagePost() {
                         </div>
                     </Grid>
                 </Grid>
-                
+
                 <Divider light sx={{color: '#dd2ac5', fontSize: '1.2em'}} variant="middle" textAlign="center">Commentaires</Divider>
                 <div className="comment-section">
                     <Grid container>
                         <Grid item xs={8}>
                             <div style={{overflowY: 'scroll', marginTop:'0.5em', maxHeight: '11em'}}>
-                                <Grid container>
-                                    <Grid item xs={3}>
-                                        <div className="artist-comment">Moi</div>
-                                    </Grid>
-                                    <Grid item xs={7}>
-                                        <div className="text-comment">Ouais la zik est incraoyable t'es pas prêt !</div>
-                                    </Grid>
-                                    <Grid item xs={1}>
-                                        <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
-                                            <img src="/reply.svg" alt="remply" style={{width: '1em'}}></img>
-                                        </button>
-                                        <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
-                                            <img src="/bin.png" alt="remove" style={{width: '1em'}}></img>
-                                        </button>
-                                    </Grid>
-                                </Grid>
-                                <Grid container>
-                                    <Grid item xs={5}>
-                                        <div className="artist-comment-reply">Bracama</div>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <div className="text-comment">De ouuuuuuuuf je suis tellement d'accord ! On est grave corda !</div>
-                                    </Grid>
-                                    <Grid item xs={1}>
-                                        <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
-                                            <img src="/bin.png" alt="remove" style={{width: '1em'}}></img>
-                                        </button>
-                                    </Grid>
-                                </Grid>
-                                <Grid container>
-                                    <Grid item xs={3}>
-                                        <div className="artist-comment">Bracama</div>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <div className="text-comment">Ouais prêt Ouais la zik est incraoyable t'es as prêt Ouais la zik est incraoyable t'es as prêt</div>
-                                    </Grid>
-                                </Grid>
-                                
-                                <Grid container>
-                                    <Grid item xs={3}>
-                                        <div className="artist-comment">Bracama</div>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <div className="text-comment">Ouais prêt Ouais la zik est incraoyable t'es as prêt Ouais la zik est incraoyable t'es as prêt</div>
-                                    </Grid>
-                                </Grid>
+                                {props.obj.comments.map((comment: IComment, i: number) => <Comment obj={comment} id={comment._id} />)}
                             </div>
                         </Grid>
                         <Divider light orientation="horizontal" />
@@ -110,8 +146,9 @@ export function ImagePost() {
                             <Button
                                 color="secondary"
                                 variant="outlined"
-                                href='/news'
+                                href={'#'+props.id}
                                 sx={buttonCommentStyle}
+                                onClick={handleComment}
                             >Envoyer</Button>
                         </Grid>
                     </Grid>

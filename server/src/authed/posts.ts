@@ -3,6 +3,10 @@ import { JwtPayload } from 'jsonwebtoken'
 import UserModel from '../models/users'
 import PostModel from '../models/posts'
 
+export const getAllPosts = async (req: express.Request, res: express.Response) => {
+    res.json(await PostModel.find())
+}
+
 export const getPosts = async (req: express.Request<{},{}, JwtPayload>, res: express.Response) => {
 
     res.json(await PostModel.find({"artist.id": req.body.user_id}))

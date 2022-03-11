@@ -1,12 +1,44 @@
 import React, { useState } from 'react'
 import { Button, Input, Link } from '@mui/material';
 import { inputSignStyle } from '../components/style'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const apiUrl = 'http://localhost:8080'
+
+axios.interceptors.request.use(
+    config => {
+      const { origin } = new URL(config.url as string);
+      const allowedOrigins = [apiUrl];
+      const token = localStorage.getItem('token');    if (allowedOrigins.includes(origin)) {
+        config.headers!.authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+);
 
 const SignupPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [c_password, setCPassword] = useState('')
     const [pseudo, setPseudo] = useState('')
+    const nav = useNavigate()
+
+    const submitLogins = async () => {
+        const { data } = await axios.post(`${apiUrl}/register`, {
+            email: email,
+            password: password,
+            pseudo: pseudo,
+        });
+        console.log(data)
+        if (password !== c_password) {
+            return
+        }
+        nav('/validation')
+    }
 
     return (
         <div className="page-bord-centre">
@@ -55,7 +87,8 @@ const SignupPage = () => {
                 <Button
                     color="secondary"
                     variant="outlined"
-                    href='/validation'
+                    href='#'
+                    onClick={(ev: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {submitLogins()}}
                     sx={{
                         padding: '0.5em',
                         fontFamily: 'Quicksand',

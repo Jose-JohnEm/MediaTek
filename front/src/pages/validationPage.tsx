@@ -1,9 +1,55 @@
 import React, { useState } from 'react'
 import { Button, Input } from '@mui/material';
 import { inputSignStyle } from '../components/style'
+import axios  from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const apiUrl = 'http://localhost:8080'
+
+axios.interceptors.request.use(
+    config => {
+      const { origin } = new URL(config.url as string);
+      const allowedOrigins = [apiUrl];
+      const token = localStorage.getItem('token');    if (allowedOrigins.includes(origin)) {
+        config.headers!.authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+);
 
 const ValidationPage : React.FC =  () => {
     const [code, setCode] = useState('')
+    const nav = useNavigate()
+    const storedJwt : string = localStorage.getItem('token')!
+    const [jwt, setJwt] = useState(storedJwt || '')
+
+    const isTokenValid = async () => {
+        const { data } = await axios.get(`${apiUrl}/auth/user`);
+        if (data._id === undefined) {
+            if (data.message === "Invalid Token") {
+                nav('/singin')
+            }
+        }
+
+    }
+
+    const isCodeValid = async ()  => {
+        const { status } = await axios.post(`${apiUrl}/register`, {
+            code: code,
+        });
+        if (status === 200) {
+            nav('/news')
+        }
+    }
+    
+    const reSendCode = async () => {
+        await axios.get(`${apiUrl}/register`);
+    }
+
+    isTokenValid()
     
     return (
         <div className="page-bord-centre">
@@ -23,7 +69,8 @@ const ValidationPage : React.FC =  () => {
                 <div>
                     <Button
                         color="secondary"
-                        href='/validation'
+                        href='#'
+                        onClick={ev => reSendCode()}
                         sx={{
                             fontFamily: 'Quicksand',
                             fontSize: '1em',
@@ -35,7 +82,8 @@ const ValidationPage : React.FC =  () => {
                 <Button
                     color="secondary"
                     variant="outlined"
-                    href='/validation'
+                    href='#'
+                    onClick={ev => isCodeValid()}
                     sx={{
                         padding: '0.5em',
                         fontFamily: 'Quicksand',

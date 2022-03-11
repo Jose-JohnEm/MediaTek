@@ -15,12 +15,12 @@ function Header () {
       return (
         <>
         <Nav.Link href="/signin">
-            <p className="navbar-title">
+            <p className="navbar-title g-border-btn nav-spec">
               Mon profil
             </p>
           </Nav.Link>
           <Nav.Link onClick={logout} href="/">
-            <p className="navbar-title">
+            <p className="navbar-title p-border-btn nav-spec">
               Se déconnecter
             </p>
           </Nav.Link>

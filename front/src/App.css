@@ -171,6 +171,13 @@ h6 {
   border-color: #35e6c8;
 }
 
+.nav-spec {
+  border-style: solid;
+  border-radius: 2em;
+  padding: 0.5em;
+  margin-top: 0.2em;
+}
+
 .p-border-btn {
   border-color: #dd2ac5;
 }

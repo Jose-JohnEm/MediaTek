@@ -1,10 +1,10 @@
 import { Button, Card, Divider, Grid, Input } from "@mui/material";
 import { cardStyle, inputCommentStyle, buttonCommentStyle } from '../components/style';
 import React, { useEffect, useState } from "react";
-import { borderColor } from "@mui/system";
-import { IComment, IPost, IReply } from './interfaces'
+import { IComment, IPost } from './interfaces'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Comment } from './comments'
 
 const apiUrl = 'http://localhost:8080'
 
@@ -22,50 +22,6 @@ axios.interceptors.request.use(
     }
 );
 
-const Reply : React.FC<{obj: IReply, id: string}> = (props) => {
-    return (
-        <>
-            <Grid container>
-                <Grid item xs={5}>
-                    <div className="artist-comment-reply">{props.obj.writer_pseudo}</div>
-                </Grid>
-                <Grid item xs={6}>
-                    <div className="text-comment">{props.obj.comment}</div>
-                </Grid>
-                <Grid item xs={1}>
-                    <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
-                        <img src="/bin.png" alt="remove" style={{width: '1em'}}></img>
-                    </button>
-                </Grid>
-            </Grid>
-        </>
-    )
-}
-
-const Comment : React.FC<{obj: IComment, id: string}> = (props) => {
-
-    return (
-        <>
-            <Grid container>
-                <Grid item xs={3}>
-                    <div className="artist-comment">{props.obj.writer_pseudo}</div>
-                </Grid>
-                <Grid item xs={7}>
-                    <div className="text-comment">{props.obj.comment}</div>
-                </Grid>
-                <Grid item xs={1}>
-                    <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
-                        <img src="/reply.svg" alt="remply" style={{width: '1em'}}></img>
-                    </button>
-                    <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
-                        <img src="/bin.png" alt="remove" style={{width: '1em'}}></img>
-                    </button>
-                </Grid>
-            </Grid>
-            {props.obj.replyes.map((reply: IReply, i: number) => <Reply obj={reply} id={reply._id} />)}
-        </>
-    )
-}
 
 export const Post : React.FC<{obj: IPost, id: string}> = (props) => {
     const [isClick, setClick] = useState(false);
@@ -128,7 +84,7 @@ export const Post : React.FC<{obj: IPost, id: string}> = (props) => {
                     <Grid container>
                         <Grid item xs={8}>
                             <div style={{overflowY: 'scroll', marginTop:'0.5em', maxHeight: '11em'}}>
-                                {props.obj.comments.map((comment: IComment, i: number) => <Comment obj={comment} id={comment._id} />)}
+                                {props.obj.comments.map((comment: IComment, i: number) => <Comment parent={props.obj} obj={comment} id={comment._id} />)}
                             </div>
                         </Grid>
                         <Divider light orientation="horizontal" />

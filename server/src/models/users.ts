@@ -39,7 +39,10 @@ const userSchema = new Schema<user>({
     },
     token: String,
     certificat: {
-        valid: Boolean,
+        valid: {
+            type: Boolean,
+            default: false
+        },
         code: Number,
     },
     liked_ids: [ String ],

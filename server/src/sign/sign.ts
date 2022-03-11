@@ -3,6 +3,33 @@ import jwt from 'jsonwebtoken'
 import UserModel from '../models/users'
 import {Request, Response} from 'express'
 
+import nodemailer from 'nodemailer';
+
+export const emailCodeSend = (email: string, code: number) => {
+    let transporter = nodemailer.createTransport({
+        service: 'yahoo',
+        auth: {
+            user: 'mediatek.taker@yahoo.com',
+            pass: 'ehmv mvqa yxli ydcb'
+        }
+    });
+
+    let mailOptions = {
+        from: 'MediaTek <mediatek.taker@yahoo.com>',
+        to: email,
+        subject: 'Code de Vérification',
+        text: "Bonjour, votre code secret est le suivant : " + code.toString(),
+    };
+
+    transporter.sendMail(mailOptions, function (error :any, info: any) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
 export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
@@ -44,7 +71,12 @@ export const register = async (req: Request, res: Response) => {
             pseudo,
             email: email.toLowerCase(),
             password: encryptedPassword,
+            certificat: {
+                code: Math.floor(Math.random() * (10000 - 1000) + 1000)
+            }
         });
+
+        emailCodeSend(email.toLowerCase(), user.certificat!.code!)
 
         const token = jwt.sign({user_id: user._id, email}, process.env.JWT_TOKEN as string, { expiresIn: "1h" });
         user.token = token;

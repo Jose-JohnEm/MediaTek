@@ -62,9 +62,17 @@ export const postSchema = new Schema<post>({
         required: true,
         default: 0,
     },
-    comments: [ commentSchema ]
+    comments: {
+        type: [ commentSchema ],
+        required: false,
+        ref: 'Comment'
+    }
 })
 
-const Post = mongoose.model('Post', commentSchema)
+const Post = mongoose.model('Post', postSchema)
+
+postSchema.pre('save', function(next) {
+    next();
+});
 
 export default Post

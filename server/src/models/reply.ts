@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 export interface reply {
-    _id: number
-    epoch: number
+    _id?: number
+    epoch?: number
     writer_id: string
     writer_pseudo: string
     comment: string
@@ -31,5 +31,9 @@ export const replySchema = new Schema<reply>({
 })
 
 const Reply = mongoose.model('Reply', replySchema);
+
+replySchema.pre('save', function(next) {
+    next();
+});
 
 export default Reply

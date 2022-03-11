@@ -4,12 +4,12 @@ import { replySchema, reply } from './reply';
 const Schema = mongoose.Schema;
 
 export interface comment {
-    _id: string
-    epoch: number
+    _id?: string
+    epoch?: number
     writer_id: string
     writer_pseudo: string
     comment: string
-    replyes: reply[]
+    replyes?: reply[]
 }
 
 export const commentSchema = new Schema<comment>({
@@ -30,9 +30,17 @@ export const commentSchema = new Schema<comment>({
         type: String,
         required: true,
     },
-    replyes: [ replySchema ]
+    replyes: {
+        type: [ replySchema ],
+        required: false,
+        ref: 'Reply'
+    }
 })
 
-const comment = mongoose.model('Comment', commentSchema);
+const Comment = mongoose.model('Comment', commentSchema);
+
+commentSchema.pre('save', function(next) {
+    next();
+});
 
 export default Comment

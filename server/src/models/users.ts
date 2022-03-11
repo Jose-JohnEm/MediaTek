@@ -12,8 +12,8 @@ interface user {
         valid?: boolean
         code?: number
     }
-    liked_ids?: number[]
-    saved_ids?: number[]
+    liked_ids?: string[]
+    saved_ids?: string[]
 }
 
 const emailValidation = (email: string) => {
@@ -42,8 +42,8 @@ const userSchema = new Schema<user>({
         valid: Boolean,
         code: Number,
     },
-    liked_ids: [ Number ],
-    saved_ids: [ Number ],
+    liked_ids: [ String ],
+    saved_ids: [ String ],
 })
 
 const User = mongoose.model('User', userSchema);

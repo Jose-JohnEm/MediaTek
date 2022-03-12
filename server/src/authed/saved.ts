@@ -7,10 +7,10 @@ export const getSaveds = async (req: express.Request<{},{}, JwtPayload>, res: ex
     try {
         const user = await UserModel.findById(req.body.user_id)
         var posts = []
-    
+
         for (const post_id of user!.saved_ids!) {
             var post = await PostModel.findById(post_id)
-            
+
             if (post) {
                 posts.push(post)
             }

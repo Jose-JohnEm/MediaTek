@@ -6,7 +6,7 @@ import fs from 'fs'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import { login, register } from './src/sign/sign'
-import { getAllPosts } from './src/authed/posts';
+import { addPostView, getAllPosts } from './src/authed/posts';
 
 dotenv.config()
 
@@ -48,5 +48,6 @@ app.post('/register', register)
 app.post('/login', login)
 
 app.get('/posts', getAllPosts)
+app.post('/posts/view', addPostView)
 
 app.use('/auth', auth)

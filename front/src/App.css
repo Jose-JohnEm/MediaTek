@@ -60,6 +60,15 @@
   font-family: 'Quicksand';
 }
 
+.micro-buttons-already-stated {
+  width: 3em;
+  background-color: #dd2ac5;
+}
+
+.micro-buttons {
+  width: 3em;
+}
+
 h1 {
   font-family: 'Nanum Gothic';
   font-size: 6em;

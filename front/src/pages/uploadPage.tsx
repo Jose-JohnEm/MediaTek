@@ -33,9 +33,11 @@ const UploadPage = () => {
 
     const fileInput = useRef();
 
-    if (!localStorage.getItem('token')) {
-        nav('/signin')
-    }
+    useEffect(() => {
+        if (!localStorage.getItem('token')) {
+            nav('/signin')
+        }
+    }, [])
 
     const closeSnack = () => {
         setOpen(false)
@@ -66,6 +68,15 @@ const UploadPage = () => {
             //         setOpen(true)
             //     }
             // })
+            // console.log({
+            //     title: titre,
+            //     category: category,
+            //     src: file,
+            //     description: description,
+            // })
+            if (!titre || !category || !file || !description) {
+                throw 'Aucun champs ne doit être vide'
+            }
 
             const { data } = await axios.post(`${apiUrl}/auth/user/posts`, {
                 title: titre,
@@ -81,6 +92,7 @@ const UploadPage = () => {
             setSevCategory('error')
             setMessage(error as string)
             setOpen(true)
+            console.error(error)
         }
     }
 
@@ -124,6 +136,7 @@ const UploadPage = () => {
                             type='file'
                             disableUnderline={true}
                             sx={inputSignStyle}
+                            onChange={ev => setFile(ev.target.value)}
                         ></Input>
                     </div>
                     <div className="sign-field" style={{maxLines:'5', textAlign: 'left'}}>

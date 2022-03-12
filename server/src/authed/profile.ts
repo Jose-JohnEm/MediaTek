@@ -10,20 +10,28 @@ export const getProfile = async (req: express.Request<{},{}, JwtPayload>, res: e
     res.json(await UserModel.findById(req.body.user_id))
 }
 
+//TODO: Fix cette putain de fonction !!!
 export const rmProfile = async (req: express.Request<{},{}, JwtPayload>, res: express.Response) => {
+    const user = await UserModel.findById(req.body.user_id)
+
     for (const post of await PostModel.find({"artist.id": req.body.user_id})) {
         post.delete()
     }
 
-    for (const post of await PostModel.find({"comments.writer_id": req.body.user_id})) {
-        for (const comment of post.comments) {
-            for (const reply of comment.replyes!) {
-                comment.remove({"replyes._id": reply._id})
-            }
-            post.remove({"comment._id": comment._id})
-        }
+    for (const post_id of user!.liked_ids!) {
+        const tmp = await PostModel.findById(post_id)
+        tmp!.likes--;
     }
 
+    for (const post of await PostModel.find()) {
+        for (const comment of post.comments) {
+            for (const reply of comment.replyes!) {
+                reply.remove({writer_id: req.body.user_id})
+            }
+            comment.remove({writer_id: req.body.user_id})
+        }
+        await post.save()
+    }
     await UserModel.findByIdAndDelete(req.body.user_id).exec()
     res.json({message: 'Account no longer exists'})
 }

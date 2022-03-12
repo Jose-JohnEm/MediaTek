@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Button, Input, Link, Snackbar } from '@mui/material';
+import { Alert, Button, Input, Snackbar } from '@mui/material';
 import { inputSignStyle } from '../components/style'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -31,18 +31,24 @@ const SigninPage : React.FC =  () => {
         setOpen(false)
     }
 
-    async function tryLogin () {
-        try {
-            const { data } = await axios.post(`${apiUrl}/login`, {
-                email: email,
-                password: password,
-            });
-            localStorage.setItem('token', data.token);
+    function tryLogin () {
+        axios.post(`${apiUrl}/login`, {
+            email: email,
+            password: password,
+        }).then(req => {
+            localStorage.setItem('token', req.data.token);
             nav('/news')
-        } catch (err) {
-            setMessage(err as string)
-            setOpen(true)
-        }
+        })
+        .catch(err => {
+            if (err.reponse.data.error) {
+                setMessage(`${err.reponse.data.error}`)
+                setOpen(true)
+            }
+            else {
+                setMessage(err)
+                setOpen(true)
+            }
+        })
     }
 
     return (

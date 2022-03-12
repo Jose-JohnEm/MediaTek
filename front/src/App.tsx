@@ -22,17 +22,20 @@ const theme = createTheme({
 
 function App() {
   return (
-    
+
     <div className="App">
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Quicksand&family=Spartan:wght@200&display=swap');
-      </style> 
+      </style>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <Header />
           <Routes>
             <Route path="/" element={ <HomePage/> }/>
-            <Route path="/news" element={ <NewsPage/> }/>
+            <Route path="/news" element={ <NewsPage param=''/> }/>
+            <Route path="/news/me" element={ <NewsPage param='/me'/> }/>
+            <Route path="/news/liked" element={ <NewsPage param='/liked'/> }/>
+            <Route path="/news/saved" element={ <NewsPage param='/saved'/> }/>
             <Route path="/upload" element={ <UploadPage/> }/>
             <Route path="/account" element={ <AccountPage/> }/>
             <Route path="/signin" element={ <SigninPage/> }/>
@@ -40,7 +43,7 @@ function App() {
             <Route path="/signup" element={ <SignupPage/> }/>
 
           </Routes>
-        
+
         </BrowserRouter>
       </ThemeProvider>
     </div>

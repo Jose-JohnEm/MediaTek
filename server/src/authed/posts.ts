@@ -3,6 +3,20 @@ import { JwtPayload } from 'jsonwebtoken'
 import UserModel from '../models/users'
 import PostModel from '../models/posts'
 
+export const addPostView = async (req: express.Request, res: express.Response) => {
+
+    try {
+        const post = await PostModel.findById(req.body.id)
+
+        post!.views++
+        await post!.save()
+        res.json({message: 'Invalid post id'})
+    }
+    catch (err) {
+        res.status(404).json({message: 'Invalid post id'})
+    }
+}
+
 export const getAllPosts = async (req: express.Request, res: express.Response) => {
     res.json(await PostModel.find())
 }

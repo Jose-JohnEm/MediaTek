@@ -26,7 +26,14 @@ axios.interceptors.request.use(
 export const Post : React.FC<{obj: IPost, id: string}> = (props) => {
     const [isClick, setClick] = useState(false);
     const [comment, setComment] = useState('')
+    const [imageSrc, setImageSrc] = useState('')
     const nav = useNavigate()
+
+    // useEffect(() => {
+    //     async () => {
+    //         setImageSrc(' ')
+    //     }
+    // })
 
     async function handleComment() {
         try {
@@ -52,7 +59,7 @@ export const Post : React.FC<{obj: IPost, id: string}> = (props) => {
             >
                 <Grid container >
                     <Grid item xs={6}>
-                        <img src={props.obj.src} alt={props.obj.title} className="post-img"></img>
+                        <img src={imageSrc} alt={props.obj.title} className="post-img"></img>
                     </Grid>
                     <Grid item xs={6}>
                         <div className="post-card-part">
@@ -84,7 +91,7 @@ export const Post : React.FC<{obj: IPost, id: string}> = (props) => {
                     <Grid container>
                         <Grid item xs={8}>
                             <div style={{overflowY: 'scroll', marginTop:'0.5em', maxHeight: '11em'}}>
-                                {props.obj.comments.map((comment: IComment, i: number) => <Comment parent={props.obj} obj={comment} id={comment._id} />)}
+                                {props.obj.comments.map((com: IComment, i: number) => <Comment parent={props.obj} obj={com} id={com._id} comment={comment} />)}
                             </div>
                         </Grid>
                         <Divider light orientation="horizontal" />

@@ -1,8 +1,9 @@
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { Alert, AlertColor, Button, FormControl, FormControlLabel, FormLabel, Input, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Snackbar } from '@mui/material';
 import { inputDescriptionStyle, inputSignStyle } from '../components/style'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import S3 from 'react-aws-s3'
 
 const apiUrl = 'http://localhost:8080'
 
@@ -30,6 +31,7 @@ const UploadPage = () => {
     const [message, setMessage] = useState('')
     const [sevCategory, setSevCategory] = useState('error')
 
+    const fileInput = useRef();
 
     if (!localStorage.getItem('token')) {
         nav('/signin')
@@ -39,8 +41,32 @@ const UploadPage = () => {
         setOpen(false)
     }
 
-    const submitLogins = async () => {
+    const submitLogins = async (event) => {
         try {
+            // event.preventDefault();
+            // var file = (fileInput.current as any).files[0]
+            // var newFileName = (fileInput.current as any).files[0].name
+            // const config = {
+            //     bucketName: 'mediatek-media-files',
+            //     region: 'eu-west-3',
+            //     accessKeyId: 'AKIAX4ONKWV5SADDP7LI',
+            //     secretAccessKey: 'mZ8tofHzp8idiZ5HthfjNhNLZ0CM7MN6HNT'
+            // }
+            // const client = new S3(config)
+            // client.uploadFile(file, newFileName).then(data => {
+            //     console.log(data)
+            //     if (data.status === 204) {
+            //         setSevCategory('success')
+            //         setMessage('Le fichier a été chargé correctement')
+            //         setOpen(true)
+            //     }
+            //     else {
+            //         setSevCategory('error')
+            //         setMessage('La soumission a échoué')
+            //         setOpen(true)
+            //     }
+            // })
+
             const { data } = await axios.post(`${apiUrl}/auth/user/posts`, {
                 title: titre,
                 category: category,
@@ -93,7 +119,7 @@ const UploadPage = () => {
                     </div>
                     <div className="sign-field">
                         <Input
-                            onChange={(ev: React.ChangeEvent<HTMLInputElement>): void => setFile(ev.target.value)}
+                            ref={fileInput}
                             margin='dense'
                             type='file'
                             disableUnderline={true}

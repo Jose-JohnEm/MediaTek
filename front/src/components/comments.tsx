@@ -19,7 +19,24 @@ axios.interceptors.request.use(
     }
 );
 
-export const Reply : React.FC<{obj: IReply, id: string}> = (props) => {
+export const Reply : React.FC<{obj: IReply, id: string, parent: any, comment: string}> = (props) => {
+    const nav = useNavigate()
+
+    async function editReply() {
+        try {
+            await axios.put(`${apiUrl}/auth/user/comment`, {
+                parent: 'comment',
+                post_id: props.parent.parent._id,
+                comment_id: props.parent.obj._id,
+                reply_id: props.obj._id,
+                comment: props.comment
+            })
+        }
+        catch (err) {
+            nav('/signin')
+        }
+    }
+
     return (
         <>
             <Grid container>
@@ -30,6 +47,9 @@ export const Reply : React.FC<{obj: IReply, id: string}> = (props) => {
                     <div className="text-comment">{props.obj.comment}</div>
                 </Grid>
                 <Grid item xs={1}>
+                    <button onClick={editReply} style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
+                        <img src="/reply.svg" alt="remply" style={{width: '1em'}}></img>
+                    </button>
                     <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
                         <img src="/bin.png" alt="remove" style={{width: '1em'}}></img>
                     </button>
@@ -39,8 +59,38 @@ export const Reply : React.FC<{obj: IReply, id: string}> = (props) => {
     )
 }
 
-export const Comment : React.FC<{obj: IComment, id: string, parent: IPost}> = (props) => {
+export const Comment : React.FC<{obj: IComment, id: string, parent: IPost, comment: string}> = (props) => {
     const nav = useNavigate()
+
+    async function handleReply() {
+        try {
+            await axios.post(`${apiUrl}/auth/user/comment`, {
+                parent: 'comment',
+                post_id: props.parent._id,
+                comment_id: props.id,
+                comment: props.comment
+            })
+            console.log("Mouais");
+
+        }
+        catch (err) {
+            nav('/signin')
+        }
+    }
+
+    async function editComment() {
+        try {
+            await axios.put(`${apiUrl}/auth/user/comment`, {
+                parent: 'post',
+                post_id: props.parent._id,
+                comment_id: props.id,
+                comment: props.comment
+            })
+        }
+        catch (err) {
+            nav('/signin')
+        }
+    }
 
     async function removeComment() {
         await axios.delete(`${apiUrl}/auth/user/comment`, {
@@ -64,7 +114,10 @@ export const Comment : React.FC<{obj: IComment, id: string, parent: IPost}> = (p
                     <div className="text-comment">{props.obj.comment}</div>
                 </Grid>
                 <Grid item xs={1}>
-                    <button style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
+                    <button onClick={handleReply} style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
+                        <img src="/reply.svg" alt="remply" style={{width: '1em'}}></img>
+                    </button>
+                    <button onClick={editComment} style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
                         <img src="/reply.svg" alt="remply" style={{width: '1em'}}></img>
                     </button>
                     <button onClick={removeComment} style={{border: 'none', background: 'transparent', borderRadius: '2em'}}>
@@ -72,7 +125,7 @@ export const Comment : React.FC<{obj: IComment, id: string, parent: IPost}> = (p
                     </button>
                 </Grid>
             </Grid>
-            {props.obj.replyes.map((reply: IReply, i: number) => <Reply obj={reply} id={reply._id} />)}
+            {props.obj.replyes.map((reply: IReply, i: number) => <Reply obj={reply} id={reply._id} parent={props} comment={props.comment} />)}
         </>
     )
 }

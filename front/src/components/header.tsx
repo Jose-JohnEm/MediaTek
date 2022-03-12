@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import {Navbar, Container, Nav}  from 'react-bootstrap';
-import axios from 'axios';
 
 
 function Header () {
@@ -14,7 +13,7 @@ function Header () {
     if (localStorage.getItem('token')) {
       return (
         <>
-        <Nav.Link href="/signin">
+        <Nav.Link href="">
             <p className="navbar-title g-border-btn nav-spec">
               Mon profil
             </p>

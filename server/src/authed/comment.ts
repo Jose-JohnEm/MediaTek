@@ -2,8 +2,6 @@ import express from 'express'
 import { JwtPayload } from 'jsonwebtoken'
 import UserModel from '../models/users'
 import PostModel from '../models/posts'
-import CommentModel, { commentSchema } from '../models/comments'
-import ReplyModel from '../models/reply'
 
 export const addComment = async (req: express.Request<{},{}, JwtPayload>, res: express.Response) => {
     try {
@@ -12,7 +10,7 @@ export const addComment = async (req: express.Request<{},{}, JwtPayload>, res: e
 
         if (req.body.parent == 'post') {
             var com = {
-                comment: req.body.comment,
+                comment: req.body.comment || ' ',
                 writer_id: req.body.user_id,
                 writer_pseudo: user!.pseudo
             }
@@ -22,7 +20,7 @@ export const addComment = async (req: express.Request<{},{}, JwtPayload>, res: e
         }
         else if (req.body.parent == 'comment') {
             var rep = {
-                comment: req.body.comment,
+                comment: req.body.comment || ' ',
                 writer_id: req.body.user_id,
                 writer_pseudo: user!.pseudo
             }
@@ -42,13 +40,13 @@ export const addComment = async (req: express.Request<{},{}, JwtPayload>, res: e
 export const editComment = async (req: express.Request<{},{}, JwtPayload>, res: express.Response) => {
     try {
         var post = await PostModel.findById(req.body.post_id)
-        
+
         if (req.body.parent == 'post') {
-            post!.comments.id(req.body.comment_id)!.comment = req.body.comment
+            post!.comments.id(req.body.comment_id)!.comment = req.body.comment || ' '
             post!.save()
         }
         else if (req.body.parent == 'comment') {
-            post!.comments.id(req.body.comment_id)!.replyes!.id(req.body.reply_id)!.comment = req.body.comment
+            post!.comments.id(req.body.comment_id)!.replyes!.id(req.body.reply_id)!.comment = req.body.comment || ' '
             post!.save()
         }
         else {
@@ -64,7 +62,7 @@ export const editComment = async (req: express.Request<{},{}, JwtPayload>, res: 
 export const rmComment = async (req: express.Request<{},{}, JwtPayload>, res: express.Response) => {
     try {
         var post = await PostModel.findById(req.body.post_id)
-        
+
         if (req.body.parent == 'post') {
             post!.comments.remove({ _id: req.body.comment_id})
             post!.save()

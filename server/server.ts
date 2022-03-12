@@ -1,12 +1,11 @@
 import express, {Request, Response, NextFunction} from 'express';
 import dotenv from 'dotenv';
 import auth from './src/authed/authenticator'
-import AWS from 'aws-sdk'
-import fs from 'fs'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import { login, register } from './src/sign/sign'
 import { addPostView, getAllPosts } from './src/authed/posts';
+import { awsMediaUpload } from './src/authed/maudit';
 
 dotenv.config()
 
@@ -49,5 +48,7 @@ app.post('/login', login)
 
 app.get('/posts', getAllPosts)
 app.post('/posts/view', addPostView)
+
+app.post('/aws', awsMediaUpload)
 
 app.use('/auth', auth)

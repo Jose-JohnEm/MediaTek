@@ -1,9 +1,8 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
-import { Alert, AlertColor, Button, FormControl, FormControlLabel, FormLabel, Input, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Backdrop, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, Input, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Snackbar } from '@mui/material';
 import { inputDescriptionStyle, inputSignStyle } from '../components/style'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import S3 from 'react-aws-s3'
 
 const apiUrl = 'http://localhost:8080'
 
@@ -24,12 +23,14 @@ axios.interceptors.request.use(
 const UploadPage = () => {
     const [titre, setTitre] = useState('')
     const [category, setCategory] = useState('')
-    const [file, setFile] = useState('')
     const [description, setDescription] = useState('')
     const nav = useNavigate()
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState('')
     const [sevCategory, setSevCategory] = useState('error')
+    const [backdrop, setBackdrop] = useState(false)
+
+    const [fileContent, setFileContent] = useState<FileList | null>(null)
 
     const fileInput = useRef();
 
@@ -43,52 +44,45 @@ const UploadPage = () => {
         setOpen(false)
     }
 
-    const submitLogins = async (event) => {
+    const uploadFile = async () => {
+        const formData = new FormData()
+
+        formData.append("file", fileContent![0])
+
+        console.log(fileContent);
+        console.log(formData);
         try {
-            // event.preventDefault();
-            // var file = (fileInput.current as any).files[0]
-            // var newFileName = (fileInput.current as any).files[0].name
-            // const config = {
-            //     bucketName: 'mediatek-media-files',
-            //     region: 'eu-west-3',
-            //     accessKeyId: 'AKIAX4ONKWV5SADDP7LI',
-            //     secretAccessKey: 'mZ8tofHzp8idiZ5HthfjNhNLZ0CM7MN6HNT'
-            // }
-            // const client = new S3(config)
-            // client.uploadFile(file, newFileName).then(data => {
-            //     console.log(data)
-            //     if (data.status === 204) {
-            //         setSevCategory('success')
-            //         setMessage('Le fichier a été chargé correctement')
-            //         setOpen(true)
-            //     }
-            //     else {
-            //         setSevCategory('error')
-            //         setMessage('La soumission a échoué')
-            //         setOpen(true)
-            //     }
-            // })
-            // console.log({
-            //     title: titre,
-            //     category: category,
-            //     src: file,
-            //     description: description,
-            // })
-            if (!titre || !category || !file || !description) {
+            const res = await axios.post(`${apiUrl}/aws`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+            })
+            return res.data.Location
+        } catch (exception) {
+            throw Error('Le partage a échoué...')
+        }
+    }
+
+    const submitLogins = async () => {
+        setBackdrop(true)
+        try {
+            if (!titre || !category || !description) {
                 throw 'Aucun champs ne doit être vide'
             }
 
             const { data } = await axios.post(`${apiUrl}/auth/user/posts`, {
                 title: titre,
                 category: category,
-                src: file,
+                src: await uploadFile(),
                 description: description,
             });
 
             setSevCategory('success')
             setMessage("Ton post a été créé avec succès")
+            setBackdrop(false)
             setOpen(true)
         } catch (error) {
+            setBackdrop(false)
             setSevCategory('error')
             setMessage(error as string)
             setOpen(true)
@@ -130,14 +124,11 @@ const UploadPage = () => {
                         </FormControl>
                     </div>
                     <div className="sign-field">
-                        <Input
-                            ref={fileInput}
-                            margin='dense'
+                        <input
                             type='file'
-                            disableUnderline={true}
-                            sx={inputSignStyle}
-                            onChange={ev => setFile(ev.target.value)}
-                        ></Input>
+                            style={inputSignStyle as React.CSSProperties}
+                            onChange={ev => setFileContent(ev.target.files)}
+                        ></input>
                     </div>
                     <div className="sign-field" style={{maxLines:'5', textAlign: 'left'}}>
                         <Input
@@ -167,6 +158,13 @@ const UploadPage = () => {
                         {message}
                       </Alert>
                     </Snackbar>
+
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={backdrop}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </div>
             </div>
         </div>

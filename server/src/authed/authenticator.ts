@@ -12,12 +12,12 @@ var router = express.Router()
 router.use(authware)
 
 router.route('/validation')
-    .post(checkValidation)
-    .get(sendAnotherCode)
+.post(checkValidation)
+.get(sendAnotherCode)
 
 router.route('/user')
-    .get(getProfile)
-    .delete(rmProfile)
+.get(getProfile)
+.delete(rmProfile)
 
 router.route('/user/posts')
     .get(getPosts)

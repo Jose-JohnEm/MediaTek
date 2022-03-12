@@ -5,6 +5,8 @@ import { IComment, IPost, IUser } from './interfaces'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Comment } from './comments'
+import ReactPlayer from 'react-player'
+import PDF, { Document, Page } from 'react-pdf';
 
 const apiUrl = 'http://localhost:8080'
 
@@ -26,7 +28,8 @@ axios.interceptors.request.use(
 export const Post : React.FC<{obj: IPost, id: string, user: IUser, refresh: Function}> = (props) => {
     const [isClick, setClick] = useState(false);
     const [comment, setComment] = useState('')
-    const [imageSrc, setImageSrc] = useState('')
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
     const nav = useNavigate()
 
     async function handleComment() {
@@ -99,10 +102,37 @@ export const Post : React.FC<{obj: IPost, id: string, user: IUser, refresh: Func
             await axios.post(`${apiUrl}/posts/view`, {
                 id: props.id
             })
-            props.refresh()
         }
         catch (err) {
 
+        }
+    }
+
+    const Content : React.FC = () => {
+
+        if (props.obj.src.endsWith(".mp3") || props.obj.src.endsWith(".wav") || props.obj.src.endsWith(".m4a")) {
+            return (
+                <ReactPlayer className="post-img" loop controls url={props.obj.src} />
+            )
+        }
+        if (props.obj.src.endsWith(".mp4")) {
+            return (
+                <ReactPlayer className="post-img" loop controls url={props.obj.src} />
+                // <img src={props.obj.src} alt={props.obj.title} className="post-img"></img>
+            )
+        }
+        if (props.obj.src.endsWith(".pdf")) {
+
+            return (
+                <a href={props.obj.src} download className="post-img">
+                    Click to download
+                </a>
+            )
+        }
+        else {
+            return (
+                <img src={props.obj.src} alt={props.obj.title} className="post-img"></img>
+            )
         }
     }
 
@@ -115,7 +145,7 @@ export const Post : React.FC<{obj: IPost, id: string, user: IUser, refresh: Func
             >
                 <Grid container >
                     <Grid item xs={6}>
-                        <img src={imageSrc} alt={props.obj.title} className="post-img"></img>
+                        <Content />
                     </Grid>
                     <Grid item xs={6}>
                         <div className="post-card-part">

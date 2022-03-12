@@ -19,7 +19,7 @@ axios.interceptors.request.use(
   }
 );
 
-const dict = {
+const dict : {[name: string] :string} = {
   '': `${apiUrl}/posts`,
   '/me':`${apiUrl}/auth/user/posts`,
   '/liked':`${apiUrl}/auth/user/liked`,
@@ -53,7 +53,7 @@ const NewsPage : React.FC<{param: string}> = ({ param }) => {
   if (posts.length) {
     return (
       <div>
-        {posts.map((post: IPost, i: number) => <Post obj={post} id={post._id} user={user} refresh={getPosts} />)}
+        {posts.map((post: IPost, i: number) => <Post obj={post} id={post._id} user={user!} refresh={getPosts} />)}
       </div>
     )
   }

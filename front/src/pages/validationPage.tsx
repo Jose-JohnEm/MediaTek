@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Alert, Button, Input, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Button, Input, Snackbar } from '@mui/material';
 import { inputSignStyle } from '../components/style'
 import axios  from 'axios';
 import { useNavigate } from 'react-router-dom';
+import SendIcon from '@mui/icons-material/Send';
 
 const apiUrl = 'http://localhost:8080'
 
@@ -81,7 +82,7 @@ const ValidationPage : React.FC =  () => {
 
     return (
         <div className="page-bord-centre">
-            <h2>Confirmez votre code secret</h2>
+            <h2 style={{marginTop: '2em'}}>Confirmez votre code secret</h2>
             <h3 style={{margin: '2em'}}>Un code vous a été envoyé par email !</h3>
             <div style={{textAlign: 'center'}}>
                 <div className="sign-field">
@@ -96,32 +97,24 @@ const ValidationPage : React.FC =  () => {
                 </div>
                 <div>
                     <Button
-                        color="secondary"
-                        href='#'
                         onClick={ev => reSendCode()}
                         sx={{
-                            fontFamily: 'Quicksand',
-                            fontSize: '1em',
+                            color: '#005050',
+                            fontSize: '1.2em',
                             borderStyle: 'none',
-                            margin: '1em 10em'
+                            margin: '1em'
                         }}
                     >Besoin d'un nouveau lien ?</Button>
                 </div>
                 <Button
                     color="secondary"
-                    variant="outlined"
-                    href='#'
-                    onClick={ev => isCodeValid()}
-                    sx={{
-                        padding: '0.5em',
-                        fontFamily: 'Quicksand',
-                        fontSize: '1.5em',
-                        borderRadius: '1em',
-                        borderStyle: 'solid'
-                    }}
+                    variant="contained"
+                    onClick={isCodeValid}
+                    endIcon={<SendIcon />}
+                    style={{backgroundColor: '#107050'}}
                 >Suivant</Button>
                 <Snackbar open={open} autoHideDuration={6000} onClose={closeSnack}>
-                  <Alert onClose={closeSnack} severity="error" sx={{ width: '100%' }}>
+                  <Alert onClose={closeSnack} severity={category as AlertColor} sx={{ width: '100%' }}>
                     {message}
                   </Alert>
                 </Snackbar>

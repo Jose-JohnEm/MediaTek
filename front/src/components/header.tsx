@@ -104,14 +104,14 @@ const Header : React.FC = () => {
   }
 
   return (
-    <Navbar bg="transparent" sticky="top" expand="lg" style={{backgroundColor: 'black'}} >
-      <Container fluid style={{backgroundColor: 'black'}} >
-        <Navbar.Brand href="/" style={{margin: '0em', marginLeft: '5em', marginTop: '1em'}}>
+    <Navbar bg="dark" sticky="top" expand="sm">
+      <Container fluid>
+        <Navbar.Brand href="/" style={{margin: '0em', marginLeft: '5em'}}>
           <img
-            alt=""
+            alt="Mtk Logo"
             src="/mtk.png"
-            width="100"
-            height="100"
+            width="50"
+            height="50"
             className="d-inline-block align-top mtk-logo"
           />{' '}
         </Navbar.Brand>
@@ -119,11 +119,9 @@ const Header : React.FC = () => {
         <Navbar.Collapse id="navbarScroll">
           <Nav
             className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: '100px' }}
             navbarScroll
           ></Nav>
           <Nav
-            style={{ maxHeight: '100px' }}
             navbarScroll
           >
             <Nav.Link href="/news">

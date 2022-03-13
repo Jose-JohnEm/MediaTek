@@ -59,7 +59,7 @@ export const Reply : React.FC<{obj: IReply, id: string, parent: any, comment: st
         return (
             <>
                 <Grid container>
-                    <Grid item xs={5}>
+                    <Grid item xs={3}>
                         <div className="artist-comment-reply">{props.obj.writer_pseudo}</div>
                     </Grid>
                     <Grid item xs={6}>
@@ -84,10 +84,10 @@ export const Reply : React.FC<{obj: IReply, id: string, parent: any, comment: st
         return (
             <>
                 <Grid container>
-                    <Grid item xs={4}>
+                    <Grid item xs={2}>
                         <div className="artist-comment-reply">{props.obj.writer_pseudo}</div>
                     </Grid>
-                    <Grid item xs={5}>
+                    <Grid item xs={10}>
                         <div className="text-comment">{props.obj.comment}</div>
                     </Grid>
                 </Grid>
@@ -149,10 +149,10 @@ export const Comment : React.FC<{obj: IComment, id: string, parent: IPost, user:
         return (
             <>
                 <Grid container>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <div className="artist-comment">{props.obj.writer_pseudo}</div>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={8}>
                         <div className="text-comment">{props.obj.comment}</div>
                     </Grid>
 
@@ -179,10 +179,10 @@ export const Comment : React.FC<{obj: IComment, id: string, parent: IPost, user:
         return (
             <>
                 <Grid container>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <div className="artist-comment">{props.obj.writer_pseudo}</div>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid item xs={10}>
                         <div className="text-comment">{props.obj.comment}</div>
                     </Grid>
                 </Grid>

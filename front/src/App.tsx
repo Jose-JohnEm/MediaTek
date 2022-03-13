@@ -16,8 +16,8 @@ import SignupPage from './pages/signupPage';
 
 const theme = createTheme({
   typography: {
-    'fontFamily': 'Open Sans'
-  }
+    'fontFamily': 'Quicksand'
+  },
 });
 
 function App() {

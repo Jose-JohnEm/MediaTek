@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Alert, Button, Input, Snackbar } from '@mui/material';
+import { Alert, Button, Card, Grid, Input, Snackbar, TextField } from '@mui/material';
 import { inputSignStyle } from '../components/style'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import SendIcon from '@mui/icons-material/Send';
 
 const apiUrl = 'http://localhost:8080'
 
@@ -31,63 +32,62 @@ const SigninPage : React.FC =  () => {
         setOpen(false)
     }
 
-    function tryLogin () {
-        axios.post(`${apiUrl}/login`, {
-            email: email,
-            password: password,
-        }).then(req => {
-            localStorage.setItem('token', req.data.token);
+    async function tryLogin () {
+        try {
+            const { data } = await axios.post(`${apiUrl}/login`, {
+                email: email,
+                password: password,
+            })
+            localStorage.setItem('token', data.token);
             nav('/news')
-        })
-        .catch(err => {
-            if (err.reponse.data.error) {
-                setMessage(`${err.reponse.data.error}`)
-                setOpen(true)
-            }
-            else {
-                setMessage(err)
-                setOpen(true)
-            }
-        })
+        }
+        catch(err :any) {
+            setMessage("Les informations sont incorrects")
+            setOpen(true)
+        }
     }
 
     return (
         <div className="page-bord-centre">
-            <h2>Connectez-vous</h2>
-            <div style={{textAlign: 'center'}}>
-                <div className="sign-field">
-                    <p className="micro-title">Email</p>
-                    <Input
-                        onChange={(ev: React.ChangeEvent<HTMLInputElement>): void => setEmail(ev.target.value)}
-                        margin='dense'
-                        type='email'
-                        disableUnderline={true}
-                        sx={inputSignStyle}
-                    ></Input>
-                </div>
-                <div className="sign-field">
-                    <p className="micro-title">Mot de passe</p>
-                    <Input
-                        onChange={(ev: React.ChangeEvent<HTMLInputElement>): void => setPassword(ev.target.value)}
-                        margin='dense'
-                        type='password'
-                        disableUnderline={true}
-                        sx={inputSignStyle}
-                    ></Input>
-                </div>
-                <Button
-                    color="secondary"
-                    variant="outlined"
-                    onClick={tryLogin}
-                    sx={{
-                        padding: '0.5em',
-                        fontFamily: 'Quicksand',
-                        fontSize: '1.5em',
-                        borderRadius: '1em',
-                        borderStyle: 'solid'
-                    }}
-                >Suivant</Button>
-                <Snackbar open={open} autoHideDuration={6000} onClose={closeSnack}>
+            <h2 style={{margin: '2em'}}>Connectez-vous</h2>
+            <div>
+                <Grid container spacing={5}>
+                    <Grid style={{textAlign: 'right'}} item xs={5}>
+                        <p className="micro-title">Email</p>
+                    </Grid>
+                    <Grid item xs={5} style={{textAlign: 'left'}}>
+                        <Input
+                            onChange={(ev: React.ChangeEvent<HTMLInputElement>): void => setEmail(ev.target.value)}
+                            margin='dense'
+                            type='email'
+                            disableUnderline={true}
+                            sx={inputSignStyle}
+                        ></Input>
+                    </Grid>
+                    <Grid item xs={2} style={{textAlign: 'left'}}></Grid>
+                    <Grid item xs={5} style={{textAlign: 'right'}}>
+                        <p className="micro-title">Mot de passe</p>
+                    </Grid>
+                    <Grid item xs={7} style={{textAlign: 'left'}}>
+                        <Input
+                            onChange={(ev: React.ChangeEvent<HTMLInputElement>): void => setPassword(ev.target.value)}
+                            margin='dense'
+                            type='password'
+                            disableUnderline={true}
+                            sx={inputSignStyle}
+                        ></Input>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            onClick={tryLogin}
+                            endIcon={<SendIcon />}
+                            style={{backgroundColor: '#107050'}}
+                        >Suivant</Button>
+                    </Grid>
+                </Grid>
+                <Snackbar open={open} autoHideDuration={2000} onClose={closeSnack}>
                   <Alert onClose={closeSnack} severity="error" sx={{ width: '100%' }}>
                     {message}
                   </Alert>

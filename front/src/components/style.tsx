@@ -3,12 +3,14 @@ import { height } from "@mui/system"
 
 export const inputSignStyle : SxProps  = {
     padding: '0.1em',
-    textAlign: 'center',
+    textAlign: 'left',
     fontFamily: 'Quicksand',
-    fontSize: '1.5em',
-    borderRadius: '0.5em',
+    fontSize: '1.3em',
+    borderRadius: '0.2em',
     borderStyle: 'solid',
-    color: '#35e6c8'
+    borderWidth: '0.1em',
+    color: '#35e6c8',
+    borderColor: '#005050'
 }
 
 export const inputCommentStyle : SxProps  = {
@@ -21,6 +23,7 @@ export const inputCommentStyle : SxProps  = {
     color: '#1e0036',
     height: '7em',
     margin: '0.25em',
+    marginRight: '1em',
 }
 
 export const buttonCommentStyle : SxProps  = {
@@ -43,12 +46,11 @@ export const inputDescriptionStyle : SxProps = {
 }
 
 export const cardStyle : SxProps = {
-    width: '60em',
-    height: '40em',
+    width: '70%',
     display: 'inline-block',
-    backgroundColor: "#1e0036",
+    backgroundColor: "#120036",
     borderColor: "#9e31f8",
-    borderRadius: "3em",
-    borderWidth: "0.4em",
+    borderRadius: "1em",
+    borderWidth: "0.5em",
     borderStyle: "solid",
 }

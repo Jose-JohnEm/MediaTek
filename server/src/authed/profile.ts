@@ -10,7 +10,7 @@ export const getProfile = async (req: express.Request<{},{}, JwtPayload>, res: e
     res.json(await UserModel.findById(req.body.user_id))
 }
 
-//TODO: Fix cette putain de fonction !!!
+//TODO: Supprimer les fichiers des posts sur le cloud
 export const rmProfile = async (req: express.Request<{},{}, JwtPayload>, res: express.Response) => {
     const user = await UserModel.findById(req.body.user_id)
 
@@ -20,7 +20,10 @@ export const rmProfile = async (req: express.Request<{},{}, JwtPayload>, res: ex
 
     for (const post_id of user!.liked_ids!) {
         const tmp = await PostModel.findById(post_id)
-        tmp!.likes--;
+        if (tmp != undefined) {
+            tmp!.likes--;
+        }
+        await tmp!.save()
     }
 
     for (const post of await PostModel.find()) {

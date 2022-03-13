@@ -5,7 +5,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import { login, register } from './src/sign/sign'
 import { addPostView, getAllPosts } from './src/authed/posts';
-import { awsMediaUpload } from './src/authed/maudit';
+import { awsMediaUpload } from './src/authed/awsUpload';
 
 dotenv.config()
 

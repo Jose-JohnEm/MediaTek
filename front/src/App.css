@@ -1,8 +1,9 @@
 .App {
   text-align: center;
   min-height: 100vh;
-  min-width: 100vw;
+  min-width: 99vw;
   background: url('./background.png');
+  background-color: #020912;
   background-size: cover;
   color: white;
 }
@@ -121,8 +122,9 @@ h6 {
 
 .comment-section {
   border-radius: 1em;
-  background-color: #9e31f8;
+  background-color: #7022af;
   margin: 1em;
+  box-shadow: 0px 0px 50px black;
 }
 
 .post-counter {
@@ -139,6 +141,7 @@ h6 {
 
 .post-img {
   height: 22em;
+  max-width: 95%;
   margin: 1em;
 }
 
@@ -149,7 +152,7 @@ h6 {
 
 .artist-comment {
   font-family: 'Nanum Gothic';
-  color: #1e0036;
+  color: #000000;
   font-size: 1.2em;
   text-align: right;
   margin: 0.3em;
@@ -157,7 +160,7 @@ h6 {
 
 .artist-comment-reply {
   font-family: 'Nanum Gothic';
-  color: #1e0036;
+  color: #000000;
   font-size: 1em;
   text-align: right;
   margin: 0.3em;
@@ -166,13 +169,13 @@ h6 {
 .text-comment {
   text-align: left;
   font-family: 'QuickSand';
-  color: #3f0072;
+  color: #1e0036;
   margin: 0.3em;
 }
 
 .big-card {
-  display: block;
   background-color: #1e0036;
+  max-width: 50%;
   border-color: #9e31f8;
   border-radius: 3em;
   border-width: 0.4em;

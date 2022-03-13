@@ -59,10 +59,10 @@ export const Reply : React.FC<{obj: IReply, id: string, parent: any, comment: st
         return (
             <>
                 <Grid container>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <div className="artist-comment-reply">{props.obj.writer_pseudo}</div>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={5}>
                         <div className="text-comment">{props.obj.comment}</div>
                     </Grid>
 
@@ -84,10 +84,10 @@ export const Reply : React.FC<{obj: IReply, id: string, parent: any, comment: st
         return (
             <>
                 <Grid container>
-                    <Grid item xs={2}>
+                    <Grid item xs={4}>
                         <div className="artist-comment-reply">{props.obj.writer_pseudo}</div>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item xs={8}>
                         <div className="text-comment">{props.obj.comment}</div>
                     </Grid>
                 </Grid>
@@ -149,10 +149,10 @@ export const Comment : React.FC<{obj: IComment, id: string, parent: IPost, user:
         return (
             <>
                 <Grid container>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <div className="artist-comment">{props.obj.writer_pseudo}</div>
                     </Grid>
-                    <Grid item xs={8}>
+                    <Grid item xs={7}>
                         <div className="text-comment">{props.obj.comment}</div>
                     </Grid>
 
@@ -171,7 +171,7 @@ export const Comment : React.FC<{obj: IComment, id: string, parent: IPost, user:
                     }
                     </Grid>
                 </Grid>
-                {props.obj.replyes.map((reply: IReply, i: number) => <Reply obj={reply} id={reply._id} parent={props} comment={props.comment} user={props.user} refresh={props.refresh}/>)}
+                {props.obj.replyes.map((reply: IReply, i: number) => <Reply obj={reply} id={reply._id} key={i} parent={props} comment={props.comment} user={props.user} refresh={props.refresh}/>)}
             </>
         )
     }
@@ -179,10 +179,10 @@ export const Comment : React.FC<{obj: IComment, id: string, parent: IPost, user:
         return (
             <>
                 <Grid container>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <div className="artist-comment">{props.obj.writer_pseudo}</div>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item xs={9}>
                         <div className="text-comment">{props.obj.comment}</div>
                     </Grid>
                 </Grid>

@@ -4,6 +4,7 @@ import { inputSignStyle } from '../components/style'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
+import { GoogleLog } from '../components/google';
 
 const apiUrl = 'http://localhost:8080'
 
@@ -20,6 +21,7 @@ axios.interceptors.request.use(
       return Promise.reject(error);
     }
 );
+
 
 const SigninPage : React.FC =  () => {
     const [email, setEmail] = useState('')
@@ -52,6 +54,9 @@ const SigninPage : React.FC =  () => {
             <h2 style={{margin: '2em'}}>Connectez-vous</h2>
             <div>
                 <Grid container spacing={5}>
+                    <Grid item xs={12}>
+                        <GoogleLog openSetter={setOpen} messageSetter={setMessage} />
+                    </Grid>
                     <Grid style={{textAlign: 'right'}} item xs={5}>
                         <p className="micro-title">Email</p>
                     </Grid>
@@ -61,6 +66,7 @@ const SigninPage : React.FC =  () => {
                             margin='dense'
                             type='email'
                             disableUnderline={true}
+                            autoFocus
                             sx={inputSignStyle}
                         ></Input>
                     </Grid>

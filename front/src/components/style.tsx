@@ -1,5 +1,4 @@
 import { SxProps } from "@mui/material"
-import { height } from "@mui/system"
 
 export const inputSignStyle : SxProps  = {
     padding: '0.1em',
@@ -46,11 +45,12 @@ export const inputDescriptionStyle : SxProps = {
 }
 
 export const cardStyle : SxProps = {
-    width: '70%',
+    width: '50%',
     display: 'inline-block',
     backgroundColor: "#120036",
     borderColor: "#9e31f8",
-    borderRadius: "1em",
-    borderWidth: "0.5em",
+    borderRadius: "2em",
+    borderWidth: "0.4em",
     borderStyle: "solid",
+    boxShadow: "0px 0px 30px #120036",
 }

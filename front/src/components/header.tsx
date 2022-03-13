@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import {Navbar, Container, Nav}  from 'react-bootstrap';
 import {  useNavigate } from 'react-router-dom';
+import { useGoogleLogout } from 'react-google-login'
 
 const apiUrl = 'http://localhost:8080'
 
@@ -57,9 +58,29 @@ const Header : React.FC = () => {
         }
       }
 
+      const GoogleOut : React.FC<{disconnectFunc: Function}> = ({ disconnectFunc }) => {
+        const handleDisconnect = () => {
+            disconnectFunc()
+        }
+
+        const { signOut } = useGoogleLogout({
+            clientId: '822218891544-pokpikoujc37jn7d57lakjtj33tcp9kr.apps.googleusercontent.com',
+            onLogoutSuccess: handleDisconnect,
+            onFailure: handleDisconnect,
+        })
+
+        return (
+            <div>
+              <p onClick={signOut} className="navbar-title p-border-btn nav-spec">
+                Se déconnecter
+              </p>
+          </div>
+        )
+      }
+
       return (
-        <>
-        <Nav.Link href="">
+          <>
+          <Nav.Link href="">
             <p onClick={handleClick} className="navbar-title g-border-btn nav-spec">
               Mon profil
             </p>
@@ -78,10 +99,8 @@ const Header : React.FC = () => {
               <MenuItem onClick={eraseAccount}>Supprimer le compte</MenuItem>
             </Menu>
           </Nav.Link>
-          <Nav.Link onClick={logout}>
-            <p className="navbar-title p-border-btn nav-spec">
-              Se déconnecter
-            </p>
+          <Nav.Link href="">
+            <GoogleOut disconnectFunc={logout} />
           </Nav.Link>
         </>
       )

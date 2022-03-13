@@ -1,11 +1,7 @@
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-// import NotFoundPage from './pages/NotFoundPage'
 import Header from './components/header'
 import HomePage from './pages/homePage'
 import NewsPage from './pages/newsPage'
-import AccountPage from './pages/accountPage'
 import SigninPage from './pages/signinPage'
 import UploadPage from './pages/uploadPage'
 import ValidationPage from './pages/validationPage'
@@ -37,7 +33,6 @@ function App() {
             <Route path="/news/liked" element={ <NewsPage param='/liked'/> }/>
             <Route path="/news/saved" element={ <NewsPage param='/saved'/> }/>
             <Route path="/upload" element={ <UploadPage/> }/>
-            <Route path="/account" element={ <AccountPage/> }/>
             <Route path="/signin" element={ <SigninPage/> }/>
             <Route path="/validation" element={ <ValidationPage/> }/>
             <Route path="/signup" element={ <SignupPage/> }/>

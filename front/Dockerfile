@@ -3,6 +3,6 @@ WORKDIR /front
 COPY . .
 RUN yarn install
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD [ "yarn", "start" ]
